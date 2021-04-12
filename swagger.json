@@ -1,0 +1,27 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "v1.0.0",
+        "title": "Demo",
+        "description": "The api are created for demo purpose.",
+        "termsOfService": "None",
+        "contact": {
+            "name": "Ankit Dubey",
+            "url": "",
+            "email": "ankitdubey1234@outlook.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": ""
+        },
+        "paths": {
+
+        }
+    },
+    "servers": [
+        {
+          "url": "http://localhost:3000/Api/v1"
+        }
+      ],
+      "apis": ["./Routes/Router.js"]
+}
