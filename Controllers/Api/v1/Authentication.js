@@ -22,11 +22,11 @@ exports.Register = async (req, res) => {
         if (validator != true) {
             return res.status(400).json(validator); 
         }
-        const saltRounds = 10;
+        const saltRounds = 12;
         const hash = await bcrypt.hash(body.password, saltRounds)
         body.password = hash
         const result = await new User(body).save()
-        return res.status(200).json({data:[result], error: false, message: "User created successfully"})  
+        return res.status(200).json({data:[result], error: false, message: "User created successfully"})
        
     } catch (error) {
         console.error(error)
@@ -42,24 +42,45 @@ exports.Login = async (req, res) => {
             return res.status(400).json(validator); 
         }
         let user = await User.findOne({email: req.body.email})
-        //if user not found then return an error
+        //if user not found then create new user 
         if(!user){
-            return res.status(422).json({data:[], error: true, message: "Invalid credential"})
+            const hash = await bcrypt.hash(req.body.password, 12)
+            req.body.password = hash
+            const newUser = await new User.create(req.body).save();
+            const token = GenerateToken(newUser)
+            return res.status(200).json({data:userTransformer(newUser, token), error: false, message: "User registered."})
         }
-        console.log(user)
         //match password
         const matchPassword = await bcrypt.compare(req.body.password, user.password)
-        console.log(matchPassword)
         if(!matchPassword) {
             return res.status(422).json({data:[], error: true, message: "Password did not matched"})
         }
         //generate a token with expiration of 24 hours
-        const token = jwt.sign({
-            data: user
-        }, process.env.JWT_SECRET, {expiresIn: '24h'})
+        const token = GenerateToken(user)
 
         return res.status(200).json({data: userTransformer(user, token), error: false, message: "Login successfull"})
     } catch (error) {
         return res.status(500).json({data:[error.stack], error: true, message: "Something went wrong"})
     }
+}
+
+exports.VerifyToken = async (req, res) => {
+    try {
+        const {email} = req.decoded.data
+        const user = await User.aggregate([
+            {$project: {'updatedAt': -1}},
+            {$match: {email}}
+        ]);
+        const token = GenerateToken(user)
+        return res.status(200).json({data: userTransformer(user, token), error: false, message: "Token verified."})
+    } catch (error) {
+        return res.status(500).json({data:[error.stack], error: true, message: "Something went wrong"})
+    }
+}
+
+const GenerateToken = (payload) =>{
+    const token = jwt.sign({
+        data: payload,
+    }, process.env.JWT_SECRET, {expiresIn: '5d'})
+    return token
 }

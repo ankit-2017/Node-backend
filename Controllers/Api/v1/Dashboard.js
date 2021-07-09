@@ -11,7 +11,7 @@ exports.Profile = async (req, res) => {
             return res.status(400).json({error: true, message: "Id field is required"})
         }
         const result = await User.findOne({_id: req.query.id})
-        return res.status(200).json({data: userTransformer(result, ""), error: false, message: "Profile fetched successfully"})  
+        return res.status(200).json({data: userTransformer(result, ""), error: false, message: "Profile fetched successfully"})
        
     } catch (error) {
         return res.status(500).json({data:[error.message], error: true, message: "Something went wrong"})
