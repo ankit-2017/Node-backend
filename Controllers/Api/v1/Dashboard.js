@@ -1,20 +1,63 @@
-const User = require("../../../Database/Models/UserModel")
-const { userTransformer } = require("../../Transformer/authTransformer")
-const UserValidator = require("../../../Validators/UserValidator")
+const { Client, BaseCollection } = require('porn-x')
+
+const collection = new BaseCollection();
+const client = new Client();
 
 
-
-exports.Profile = async (req, res) => {
+exports.getMedia = async (req, res) => {
     try {
         console.log(req.query)
-        if(!req.query.id) {
-            return res.status(400).json({error: true, message: "Id field is required"})
+        const queryString = req.query.param
+        const result = await client.getImages(queryString || "Alison Tyler");
+        const updatedResult = result.images.map((item, index) => ({ id: index, url: item }))
+        const response = {
+            images: updatedResult,
+            title: result.title
         }
-        const result = await User.findOne({_id: req.query.id})
-        return res.status(200).json({data: userTransformer(result, ""), error: false, message: "Profile fetched successfully"})
-       
+        return res.status(200).json(response)
+
     } catch (error) {
-        return res.status(500).json({data:[error.message], error: true, message: "Something went wrong"})
-        
+        return res.status(500).json({ data: [error.message], error: true, message: "Something went wrong" })
+
+    }
+}
+
+exports.getVideos = async (req, res) => {
+    try {
+        console.log(req.query)
+        const queryString = req.query.param
+        const result = await client.getShortVideos(queryString || "Alison Tyler");
+        console.log('result', result)
+        const updatedResult = result?.map((item, index) => ({ id: index, url: item }))
+        const response = {
+            videos: updatedResult,
+            title: req.query.param
+        }
+        return res.status(200).json(response)
+
+    } catch (error) {
+        return res.status(500).json({ data: [error.message], error: true, message: "Something went wrong" })
+
+    }
+}
+
+exports.getModels = async (req, res) => {
+    try {
+        console.log(req.query)
+        const queryString = req.query.param
+        collection.getWallpaper("Alison tyler").then(data => {
+            console.log('data', data)
+        })
+        // console.log('result', result)
+        // const updatedResult = result?.map((item, index) => ({ id: index, url: item }))
+        const response = {
+            images: [],
+            title: req.query.param
+        }
+        return res.status(200).json(response)
+
+    } catch (error) {
+        return res.status(500).json({ data: [error.message], error: true, message: "Something went wrong" })
+
     }
 }

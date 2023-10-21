@@ -15,9 +15,12 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "fastest-validator": "^1.10.1",
+    "fix-esm": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",
     "morgan": "^1.10.0",
+    "porn-x": "^1.0.54",
+    "puppeteer": "^19.4.1",
     "swagger-jsdoc": "^7.0.0-rc.6",
     "swagger-ui-express": "^4.1.6"
   },
