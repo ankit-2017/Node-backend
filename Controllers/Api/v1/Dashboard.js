@@ -8,8 +8,8 @@ exports.getMedia = async (req, res) => {
     try {
         console.log(req.query)
         const queryString = req.query.param
-        const result = await client.getImages(queryString || "Alison Tyler");
-        const updatedResult = result.images.map((item, index) => ({ id: index, url: item }))
+        const result = await client.getImages(queryString || "Alison Tyler", { page: 1 });
+        const updatedResult = result.images?.slice(0, 50).map((item, index) => ({ id: index, url: item }))
         const response = {
             images: updatedResult,
             title: result.title
