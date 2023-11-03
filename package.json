@@ -25,6 +25,7 @@
     "morgan": "^1.10.0",
     "porn-x": "^1.0.54",
     "puppeteer": "^19.4.1",
+    "random-words": "^2.0.0",
     "swagger-jsdoc": "^7.0.0-rc.6",
     "swagger-ui-express": "^4.1.6"
   },
