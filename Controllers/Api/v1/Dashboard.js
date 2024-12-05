@@ -6,13 +6,28 @@ const client = new Client();
 
 exports.getMedia = async (req, res) => {
     try {
-        console.log(req.query)
         const queryString = req.query.param
-        const result = await client.getImages(queryString || "Alison Tyler", { page: 1 });
-        const updatedResult = result.images?.slice(0, 50).map((item, index) => ({ id: index, url: item }))
+        const result = await client.getPictures(queryString || "Alison tyler", { page: 1 });
+        const updatedResult = result?.map((item, index) => ({ id: item.id, url: item.image.replace('//sxypix.com/', '/') }))
         const response = {
             images: updatedResult,
-            title: result.title
+            title: result.title || ''
+        }
+        return res.status(200).json(response)
+
+    } catch (error) {
+        return res.status(500).json({ data: [error.message], error: true, message: "Something went wrong" })
+
+    }
+}
+
+exports.getImagesFromId = async (req, res) => {
+    try {
+        const id = req.query.param
+        const result = await client.getImagesFromId(id || "9d529e03aab6972650db6a4cdf37fdeb", { page: 1 });
+        const updatedResult = result?.slice(0, 50).map((item, index) => ({ id: index, url: item.replace('//sxypix.com/', '/') }))
+        const response = {
+            images: updatedResult
         }
         return res.status(200).json(response)
 

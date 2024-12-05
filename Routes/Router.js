@@ -5,12 +5,13 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('../swagger.json');
 
 const { Register, Login, VerifyToken } = require("../Controllers/Api/v1/Authentication")
-const { getMedia, getVideos, getModels } = require("../Controllers/Api/v1/Dashboard")
+const { getMedia, getVideos, getModels, getImagesFromId } = require("../Controllers/Api/v1/Dashboard")
 const { getWords } = require("../Controllers/Api/v1/QuickWord")
 
 router.post("/user-signup", Register)
 router.post("/login", Login)
 router.get("/get-media", getMedia)
+router.get("/get-images-from-id", getImagesFromId)
 router.get('/get-videos', getVideos)
 router.get('/get-models', getModels)
 router.get('/get-words', getWords)
