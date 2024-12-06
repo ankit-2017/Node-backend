@@ -25,7 +25,7 @@ exports.getImagesFromId = async (req, res) => {
     try {
         const id = req.query.param
         const result = await client.getImagesFromId(id || "9d529e03aab6972650db6a4cdf37fdeb", { page: 1 });
-        const updatedResult = result?.slice(0, 50).map((item, index) => ({ id: index, url: item.replace('//sxypix.com/', '/') }))
+        const updatedResult = result?.slice(0, 100)?.map((item, index) => ({ id: index, url: item.replace('//sxypix.com/', '/') }))
         const response = {
             images: updatedResult
         }
