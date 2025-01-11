@@ -25,7 +25,7 @@ exports.getImagesFromId = async (req, res) => {
     try {
         const id = req.query.param
         const result = await client.getImagesFromId(id || "9d529e03aab6972650db6a4cdf37fdeb", { page: 1 });
-        const updatedResult = result?.slice(0, 100)?.map((item, index) => ({ id: index, url: item.replace('//sxypix.com/', '/') }))
+        const updatedResult = result?.map((item, index) => ({ id: index, url: item.replace('//sxypix.com/', '/') }))
         const response = {
             images: updatedResult
         }
@@ -47,6 +47,24 @@ exports.getVideos = async (req, res) => {
         const response = {
             videos: updatedResult,
             title: req.query.param
+        }
+        return res.status(200).json(response)
+
+    } catch (error) {
+        return res.status(500).json({ data: [error.message], error: true, message: "Something went wrong" })
+
+    }
+}
+
+exports.getGifs = async (req, res) => {
+    try {
+        console.log(req.query)
+        const queryString = req.query.param
+        const result = await client.getGif(queryString || "Alison Tyler");
+        // console.log('result', result)
+        const updatedResult = result?.gifs?.map((item, index) => ({ id: index, url: item }))
+        const response = {
+            gifs: updatedResult || []
         }
         return res.status(200).json(response)
 
